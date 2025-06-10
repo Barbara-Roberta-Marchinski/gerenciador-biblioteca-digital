@@ -24,17 +24,29 @@ def main():
 
         if opcao == '1':
             docs = listar_documentos_por_tipo()
-            for tipo, arquivos in docs.items():
-                print(f"\nTipo: {tipo.upper()}")
-                for arq in arquivos:
-                    print(f"  - {arq}")
+            if not docs:
+                print("\nNenhum documento encontrado.")
+            else:
+                # --- MELHORIA 2: Ordena os tipos de arquivo (epub, pdf, etc.) ---
+                for tipo in sorted(docs.keys()):
+                    arquivos = docs[tipo]
+                    print(f"\nTipo: {tipo.upper()}")
+                    # --- MELHORIA 2: Ordena os arquivos de cada tipo em ordem alfabética ---
+                    for arq in sorted(arquivos):
+                        print(f"  - {arq}")
         
         elif opcao == '2':
             docs = listar_documentos_por_ano()
-            for ano, arquivos in sorted(docs.items()):
-                print(f"\nAno: {ano}")
-                for arq in arquivos:
-                    print(f"  - {arq}")
+            if not docs:
+                print("\nNenhum documento encontrado.")
+            else:
+                # --- MELHORIA 2: Ordena os anos ---
+                for ano in sorted(docs.keys()):
+                    arquivos = docs[ano]
+                    print(f"\nAno: {ano}")
+                    # --- MELHORIA 2: Ordena os arquivos de cada ano em ordem alfabética ---
+                    for arq in sorted(arquivos):
+                        print(f"  - {arq}")
 
         elif opcao == '3':
             origem = input("Digite o caminho completo do arquivo a ser adicionado: ")
@@ -50,8 +62,16 @@ def main():
 
         elif opcao == '5':
             nome_arquivo = input("Digite o nome do arquivo a ser removido: ")
-            sucesso, msg = remover_documento(nome_arquivo)
-            print(msg)
+            
+            # --- MELHORIA 1: Adiciona confirmação antes de remover ---
+            confirmacao = input(f"Tem certeza que deseja remover o arquivo '{nome_arquivo}'? Esta ação não pode ser desfeita. [s/n]: ")
+            
+            if confirmacao.lower() == 's':
+                sucesso, msg = remover_documento(nome_arquivo)
+                print(msg)
+            else:
+                print("Operação de remoção cancelada.")
+            # --- FIM DA MELHORIA 1 ---
 
         elif opcao == '6':
             print("Saindo do sistema. Até logo!")
